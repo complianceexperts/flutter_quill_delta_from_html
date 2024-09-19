@@ -42,6 +42,18 @@ void processNode(
     if (node.isSubscript) newAttributes['script'] = 'sub';
     if (node.isSuperscript) newAttributes['script'] = 'super';
 
+    // Also handle inline attributes
+    final moreAttributes = node.attributes;
+    // Process the style attribute
+    if (moreAttributes.containsKey('style')) {
+      final String? style = moreAttributes['style'];
+      final styleAttributes = parseStyleAttribute(style ?? '');
+      if (styleAttributes.containsKey('align')) {
+        styleAttributes.remove('align');
+      }
+      newAttributes.addAll(styleAttributes);
+    }
+
     // Use custom block definitions if provided
     if (customBlocks != null && customBlocks.isNotEmpty) {
       for (var customBlock in customBlocks) {

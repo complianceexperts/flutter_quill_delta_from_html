@@ -41,6 +41,19 @@ abstract class HtmlOperations {
       if (element.isStrike) attributes['strike'] = true;
       if (element.isSubscript) attributes['script'] = 'sub';
       if (element.isSuperscript) attributes['script'] = 'super';
+      
+      // Also handle inline attributes
+      final moreAttributes = element.attributes;
+      // Process the style attribute
+      if (moreAttributes.containsKey('style')) {
+        final String? style = moreAttributes['style'];
+        final styleAttributes = parseStyleAttribute(style ?? '');
+        if (styleAttributes.containsKey('align')) {
+          styleAttributes.remove('align');
+        }
+        attributes.addAll(styleAttributes);
+      }
+      
       for (final node in element.nodes) {
         processNode(node, attributes, delta, customBlocks: customBlocks);
       }
